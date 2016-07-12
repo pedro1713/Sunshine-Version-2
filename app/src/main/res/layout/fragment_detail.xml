@@ -82,7 +82,7 @@
         <!-- Humidity, wind, pressure -->
         <LinearLayout
             android:layout_height="match_parent"
-            android:layout_marginRight="0dp"
+            android:layout_marginEnd="0dp"
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:orientation="vertical">
