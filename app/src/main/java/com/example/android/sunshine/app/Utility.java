@@ -105,12 +105,27 @@ public class Utility {
     }
 
     /**
+     * Helper method to convert the database representation of date to something
+     * that can be presented to the user.
+     * @param context Context to use
+     * @param dateInMillis The date in milliseconds
+     * @return A date string in the format DayName Month Date, e.g.: Today July 13
+     */
+
+    public static String getFullFriendlyDateString(Context context, long dateInMillis){
+        String day = getDayName(context, dateInMillis);
+        int formatId = R.string.format_full_friendly_date;
+        return String.format(context.getString(formatId,
+                day, getFormattedMonthDay(context, dateInMillis)));
+    }
+
+    /**
      * Given a day, returns just the name to use for that day.
      * E.g "today", "tomorrow", "wednesday".
      *
      * @param context Context to use for resource localization
      * @param dateInMillis The date in milliseconds
-     * @return
+     * @return A String representing day name e.g.: Today, Tomorrow, Saturday
      */
     public static String getDayName(Context context, long dateInMillis) {
         // If the date is today, return the localized version of "Today" instead of the actual
@@ -219,6 +234,13 @@ public class Utility {
         return -1;
     }
 
+    public static boolean usingLocalGraphics(Context context){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        String sunshineArtPack = context.getString(R.string.pref_art_pack_sunshine);
+        return sp.getString(context.getString(R.string.pref_art_pack_key),sunshineArtPack)
+                .equals(sunshineArtPack);
+    }
+
     /**
      * Helper method to provide the art url according to the weather condition id returned
      * by the OpenWeatherMap call.
@@ -294,6 +316,189 @@ public class Utility {
             return R.drawable.art_clouds;
         }
         return -1;
+    }
+
+    public static String getStringForWeatherCondition(Context context, int weatherId){
+        //http://openweathermap.org/weather-conditions
+        int stringId;
+        switch (weatherId){
+            case 201:
+                stringId = R.string.condition_201;
+                break;
+            case 202:
+                stringId = R.string.condition_202;
+                break;
+            case 301:
+                stringId = R.string.condition_301;
+                break;
+            case 311:
+                stringId = R.string.condition_311;
+                break;
+            case 500:
+                stringId = R.string.condition_500;
+                break;
+            case 501:
+                stringId = R.string.condition_501;
+                break;
+            case 502:
+                stringId = R.string.condition_502;
+                break;
+            case 503:
+                stringId = R.string.condition_503;
+                break;
+            case 504:
+                stringId = R.string.condition_504;
+                break;
+            case 511:
+                stringId = R.string.condition_511;
+                break;
+            case 520:
+                stringId = R.string.condition_520;
+                break;
+            case 522:
+                stringId = R.string.condition_522;
+                break;
+            case 531:
+                stringId = R.string.condition_531;
+                break;
+            case 600:
+                stringId = R.string.condition_600;
+                break;
+            case 601:
+                stringId = R.string.condition_601;
+                break;
+            case 602:
+                stringId = R.string.condition_602;
+                break;
+            case 611:
+                stringId = R.string.condition_611;
+                break;
+            case 612:
+                stringId = R.string.condition_612;
+                break;
+            case 615:
+                stringId = R.string.condition_615;
+                break;
+            case 616:
+                stringId = R.string.condition_616;
+                break;
+            case 620:
+                stringId = R.string.condition_620;
+                break;
+            case 621:
+                stringId = R.string.condition_621;
+                break;
+            case 622:
+                stringId = R.string.condition_622;
+                break;
+            case 701:
+                stringId = R.string.condition_701;
+                break;
+            case 711:
+                stringId = R.string.condition_711;
+                break;
+            case 721:
+                stringId = R.string.condition_721;
+                break;
+            case 731:
+                stringId = R.string.condition_731;
+                break;
+            case 741:
+                stringId = R.string.condition_741;
+                break;
+            case 751:
+                stringId = R.string.condition_751;
+                break;
+            case 761:
+                stringId = R.string.condition_761;
+                break;
+            case 762:
+                stringId = R.string.condition_762;
+                break;
+            case 771:
+                stringId = R.string.condition_771;
+                break;
+            case 781:
+                stringId = R.string.condition_781;
+                break;
+            case 800:
+                stringId = R.string.condition_800;
+                break;
+            case 801:
+                stringId = R.string.condition_801;
+                break;
+            case 802:
+                stringId = R.string.condition_802;
+                break;
+            case 803:
+                stringId = R.string.condition_803;
+                break;
+            case 804:
+                stringId = R.string.condition_804;
+                break;
+            case 900:
+                stringId = R.string.condition_900;
+                break;
+            case 901:
+                stringId = R.string.condition_901;
+                break;
+            case 902:
+                stringId = R.string.condition_902;
+                break;
+            case 903:
+                stringId = R.string.condition_903;
+                break;
+            case 904:
+                stringId = R.string.condition_904;
+                break;
+            case 905:
+                stringId = R.string.condition_905;
+                break;
+            case 906:
+                stringId = R.string.condition_906;
+                break;
+            case 951:
+                stringId = R.string.condition_951;
+                break;
+            case 952:
+                stringId = R.string.condition_952;
+                break;
+            case 953:
+                stringId = R.string.condition_953;
+                break;
+            case 954:
+                stringId = R.string.condition_954;
+                break;
+            case 955:
+                stringId = R.string.condition_955;
+                break;
+            case 956:
+                stringId = R.string.condition_956;
+                break;
+            case 957:
+                stringId = R.string.condition_957;
+                break;
+            case 958:
+                stringId = R.string.condition_958;
+                break;
+            case 959:
+                stringId = R.string.condition_959;
+                break;
+            case 960:
+                stringId = R.string.condition_960;
+                break;
+            case 961:
+                stringId = R.string.condition_961;
+                break;
+            case 962:
+                stringId = R.string.condition_962;
+                break;
+            default:
+                stringId = R.string.condition_unknown;
+
+
+        }
+        return context.getString(stringId);
     }
 
     static public boolean isNetworkAvailable (Context c){
