@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:elevation="@dimen/appbar_elevation"/>
+
+    <!-- These FrameLayouts are only there to line the image up with the keyline correctly, since
+     we cannot do addition of dimensions/attributes otherwise -->
+        <ImageView
+            android:id="@+id/sunshine_logo_view"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/listPreferredItemHeight"
+            android:layout_below="@id/toolbar"
+            android:src="@drawable/ic_logo"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="center"
+            android:contentDescription="@string/app_name"
+            android:background="@color/colorPrimary"
+            android:elevation="@dimen/appbar_elevation"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/details_app_bar_overlap"
+            android:elevation="@dimen/appbar_elevation"
+            android:layout_below="@id/sunshine_logo_view"
+            android:background="@color/colorPrimary"/>
+
+    <FrameLayout
+        android:id="@+id/weather_detail_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sunshine_logo_view"
+        android:elevation="@dimen/appbar_elevation"
+        android:paddingLeft="@dimen/abc_action_bar_content_inset_material"
+        android:paddingRight="@dimen/abc_action_bar_content_inset_material" />
+
+    <fragment
+        android:id="@+id/fragment_forecast"
+        android:name="com.example.android.sunshine.app.ForecastFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/weather_detail_container"
+        tools:layout="@android:layout/list_content"/>
+
+</RelativeLayout>
