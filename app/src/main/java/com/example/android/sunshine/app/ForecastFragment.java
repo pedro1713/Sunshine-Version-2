@@ -25,6 +25,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,7 +34,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -47,8 +48,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public static final String LOG_TAG = ForecastFragment.class.getSimpleName();
     private ForecastAdapter mForecastAdapter;
 
-    private ListView mListView;
-    private int mPosition = ListView.INVALID_POSITION;
+    private RecyclerView mRecyclerView;
+    private int mPosition = RecyclerView.NO_POSITION;
     private boolean mUseTodayLayout;
 
     private static final String SELECTED_KEY = "selected_position";
@@ -151,33 +152,35 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         // The ForecastAdapter will take data from a source and
         // use it to populate the ListView it's attached to.
-        mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
+        mForecastAdapter = new ForecastAdapter(getActivity());
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         // Get a reference to the ListView, and attach this adapter to it.
-        mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
-        View emptyView = rootView.findViewById(R.id.listview_forecast_empty);
-        mListView.setEmptyView(emptyView);
-        mListView.setAdapter(mForecastAdapter);
-        // We'll call our MainActivity
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview_forecast);
 
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                // if it cannot seek to that position.
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-                if (cursor != null) {
-                    String locationSetting = Utility.getPreferredLocation(getActivity());
-                    ((Callback) getActivity())
-                            .onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
-                            ));
-                }
-                mPosition = position;
-            }
-        });
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //View emptyView = rootView.findViewById(R.id.recyclerview_forecast_empty);
+        //mRecyclerView.setEmptyView(emptyView);
+        mRecyclerView.setAdapter(mForecastAdapter);
+        // We'll call our MainActivity
+//        mRecyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+//                // CursorAdapter returns a cursor at the correct position for getItem(), or null
+//                // if it cannot seek to that position.
+//                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+//                if (cursor != null) {
+//                    String locationSetting = Utility.getPreferredLocation(getActivity());
+//                    ((Callback) getActivity())
+//                            .onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+//                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
+//                            ));
+//                }
+//                mPosition = position;
+//            }
+//        });
 
         // If there's instance state, mine it for useful information.
         // The end-goal here is that the user never knows that turning their device sideways
@@ -203,12 +206,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     // since we read the location when we create the loader, all we need to do is restart things
     void onLocationChanged( ) {
-        updateWeather();
         getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
-    }
-
-    private void updateWeather() {
-        SunshineSyncAdapter.syncImmediately(getActivity());
     }
 
     private void openPreferredLocationInMap() {
@@ -276,7 +274,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         if (mPosition != ListView.INVALID_POSITION) {
             // If we don't need to restart the loader, and there's a desired position to restore
             // to, do so now.
-            mListView.smoothScrollToPosition(mPosition);
+            mRecyclerView.smoothScrollToPosition(mPosition);
         }
         updateEmptyView();
     }
@@ -294,8 +292,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     private void updateEmptyView () {
-        if (mForecastAdapter.getCount() == 0) {
-            TextView tv = (TextView) getView().findViewById(R.id.listview_forecast_empty);
+        if (mForecastAdapter.getItemCount() == 0) {
+            TextView tv = (TextView) getView().findViewById(R.id.recyclerview_forecast_empty);
             if(null != tv){
                 @SunshineSyncAdapter.LocationStatus int status;
                 status = Utility.getLocationStatus(getActivity());

@@ -66,8 +66,8 @@
         android:layout_below="@id/appbar"
         tools:layout="@android:layout/list_content"/>
 
-    <FrameLayout
-        android:id="@+id/weather_detail_container"
+    <android.support.v4.widget.Space
+        android:id="@+id/cardviewAligner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignLeft="@id/layout_center"
@@ -76,7 +76,21 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="?attr/actionBarSize"
         android:elevation="@dimen/appbar_elevation"
-        android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
-        android:paddingEnd="@dimen/abc_list_item_padding_horizontal_material"
-        android:paddingBottom="@dimen/abc_list_item_padding_horizontal_material"/>
+        android:layout_marginEnd="@dimen/list_item_extra_padding"
+        android:layout_marginRight="@dimen/list_item_extra_padding"
+        />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/weather_detail_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignLeft="@id/cardviewAligner"
+        android:layout_alignStart="@id/cardviewAligner"
+        android:layout_alignTop="@id/cardviewAligner"
+        android:layout_alignBottom="@id/cardviewAligner"
+        app:cardElevation="@dimen/card_elevation"
+        android:layout_marginBottom="@dimen/detail_container_bottom_margin"
+        android:layout_marginRight="@dimen/abc_list_item_padding_horizontal_material"
+        android:layout_marginEnd="@dimen/abc_list_item_padding_horizontal_material"
+        app:cardPreventCornerOverlap="false"/>
 </RelativeLayout>

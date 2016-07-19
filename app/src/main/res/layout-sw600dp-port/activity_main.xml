@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -32,14 +33,15 @@
             android:layout_below="@id/sunshine_logo_view"
             android:background="@color/colorPrimary"/>
 
-    <FrameLayout
+    <android.support.v7.widget.CardView
         android:id="@+id/weather_detail_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/sunshine_logo_view"
-        android:elevation="@dimen/appbar_elevation"
-        android:paddingLeft="@dimen/abc_action_bar_content_inset_material"
-        android:paddingRight="@dimen/abc_action_bar_content_inset_material" />
+        app:cardElevation="@dimen/card_elevation"
+        android:layout_marginLeft="@dimen/abc_action_bar_content_inset_material"
+        android:layout_marginRight="@dimen/abc_action_bar_content_inset_material"
+        app:cardPreventCornerOverlap="false"/>
 
     <fragment
         android:id="@+id/fragment_forecast"
