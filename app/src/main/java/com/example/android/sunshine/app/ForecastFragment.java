@@ -25,10 +25,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -173,10 +175,26 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview_forecast);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         View emptyView = rootView.findViewById(R.id.recyclerview_forecast_empty);
-        final View parallaxView = rootView.findViewById(R.id.parallax_bar);
 
         mRecyclerView.setHasFixedSize(true); //For improved performance. Use when changes in data don't change size of layout
 
+        // The ForecastAdapter will take data from a source and
+        // use it to populate the ListView it's attached to.
+        mForecastAdapter = new ForecastAdapter(getActivity(), new ForecastAdapter.ForecastAdapterOnClickHandler() {
+            @Override
+            public void onClick(Long date, ForecastAdapter.ForecastAdapterViewHolder vh) {
+                    String locationSetting = Utility.getPreferredLocation(getActivity());
+                    ((Callback) getActivity())
+                            .onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+                                    locationSetting, date), vh
+                            );
+                mPosition = vh.getAdapterPosition();
+            }
+        }, emptyView, mChoiceMode);
+
+        mRecyclerView.setAdapter(mForecastAdapter);
+
+        final View parallaxView = rootView.findViewById(R.id.parallax_bar);
         if(null != parallaxView) {
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
                 mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -196,21 +214,25 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             }
         }
 
-        // The ForecastAdapter will take data from a source and
-        // use it to populate the ListView it's attached to.
-        mForecastAdapter = new ForecastAdapter(getActivity(), new ForecastAdapter.ForecastAdapterOnClickHandler() {
-            @Override
-            public void onClick(Long date, ForecastAdapter.ForecastAdapterViewHolder vh) {
-                    String locationSetting = Utility.getPreferredLocation(getActivity());
-                    ((Callback) getActivity())
-                            .onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-                                    locationSetting, date), vh
-                            );
-                mPosition = vh.getAdapterPosition();
-            }
-        }, emptyView, mChoiceMode);
+        final AppBarLayout appBarLayout = (AppBarLayout)rootView.findViewById(R.id.appbar);
+        if(null != appBarLayout){
+            ViewCompat.setElevation(appBarLayout, 0);
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+                    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 
-        mRecyclerView.setAdapter(mForecastAdapter);
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        if(0 == mRecyclerView.computeVerticalScrollOffset()){
+                            appBarLayout.setElevation(0);
+                        }
+                        else {
+                            appBarLayout.setElevation(appBarLayout.getTargetElevation());
+                        }
+                    }
+                });
+            }
+        }
 
 
         // If there's instance state, mine it for useful information.
